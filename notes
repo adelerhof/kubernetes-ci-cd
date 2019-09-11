@@ -1,0 +1,28 @@
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh; chmod 700 get_helm.sh; ./get_helm.sh
+
+minikube addons enable dashboard
+minikube addons list
+minikube service kubernetes-dashboard --namespace kube-system
+minikube dashboard --url
+minikube start
+Tip: Use 'minikube start -p <name>' to create a new cluster, or 'minikube delete' to delete this one.
+
+kubectl cluster-info
+kubectl get pods --all-namespaces
+
+docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan
+
+docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry
+
+docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins
+
+docker build -t socat-registry -f applications/socat/Dockerfile applications/socat
+
+docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry
+
+minikube service registry-ui
+
+kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /var/jenkins_home/secrets/initialAdminPassword
+
+http://192.168.99.101:31513/
+https://medium.com/@jimkang/how-to-start-a-new-jenkins-container-and-update-jenkins-with-docker-cf628aa495e9

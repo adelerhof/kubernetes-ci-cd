@@ -26,3 +26,51 @@ kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.it
 
 http://192.168.99.101:31513/
 https://medium.com/@jimkang/how-to-start-a-new-jenkins-container-and-update-jenkins-with-docker-cf628aa495e9
+
+###########
+$ minikube stop
+$ VBoxManage modifyvm "minikube" --cpus 4 --memory 8196
+$ minikube start --memory=8196 --cpus=4 --kubernetes-version=v1.13.0 \
+    --vm-driver=virtualbox
+
+####
+
+minikube start –memory 8000 –cpus 2
+eval $(minikube docker-env)
+minikube addons enable heapster
+minikube addons enable ingress
+kubectl apply -f registry.yaml
+minikube status
+minikube ip:registry-ui-port
+	http://192.168.99.102:32297/
+minikube dashboard
+
+# Installatie Jenkins:
+/home/erik/adelerhof.eu/pipelinestuff
+
+docker build -t 127.0.0.1:30400/jenkins:2.183 .
+docker push 127.0.0.1:30400/jenkins:2.183
+
+#Open jenkins.yaml en zoek binnen de ConfigMap sectie naar
+#kubectl config set-cluster minikube
+#--server="https://192.168.99.100:8443"
+#Vervang 192.168.99.100 door Minikube’s IP address
+
+kubectl create –f jenkins.yaml
+
+#e6b96533fb354eb08010563d7e617339
+#http://192.168.99.102:30447/
+
+
+kubectl create -f sonar-pv-postgres.yaml
+kubectl create -f sonar-pvc-postgres.yaml
+
+kubectl create secret generic postgres-pwd --from-literal=password=password
+kubectl create -f sonar-postgres-deployment.yaml
+kubectl create -f sonar-postgres-service.yaml
+kubectl create -f sonarqube-deployment.yaml
+kubectl create -f sonarqube-service.yaml
+
+#http://192.168.99.102:32501/sonar/about
+admin/admin
+#install SonarQube Scanner for Jenkins
